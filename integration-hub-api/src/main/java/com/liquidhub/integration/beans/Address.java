@@ -5,6 +5,32 @@ package com.liquidhub.integration.beans;
  */
 public class Address {
 
+    //Home, Office, PO Box etc
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "addressType='" + addressType + '\'' +
+                ", line1='" + line1 + '\'' +
+                ", line2='" + line2 + '\'' +
+                ", line3='" + line3 + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", zip='" + zip + '\'' +
+                ", country='" + country + '\'' +
+                '}';
+    }
+
+    public String getAddressType() {
+        return addressType;
+    }
+
+    public void setAddressType(String addressType) {
+        this.addressType = addressType;
+    }
+
+    String addressType ;
+
     String line1, line2, line3, city, state, zip, country ;
 
     public String getLine1() {
@@ -62,4 +88,5 @@ public class Address {
     public void setCountry(String country) {
         this.country = country;
     }
+
 }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+
+   <context:annotation-config />
+    <context:component-scan base-package="com.liquidhub.integration"/>
+
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:ihub.properties</value>
+                <value>classpath:ihub-test.properties</value>
+
+            </list>
+        </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+    </bean>
+
+
+   <!-- =============================================== -->
+   <!-- JMS Common, Define JMS connectionFactory       -->
+   <!-- =============================================== -->
+   <!-- Activemq connection factory -->
+   <bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+      <!-- brokerURL, You may have different IP or port -->
+      <constructor-arg index="0" value="tcp://${jms.host:localhost}:${jms.port:61616}" />
+   </bean>
+
+   <!-- Pooled Spring connection factory -->
+   <bean id="connectionFactory"
+         class="org.springframework.jms.connection.CachingConnectionFactory">
+      <constructor-arg ref="amqConnectionFactory" />
+   </bean>
+
+   <!-- ======================================================= -->
+   <!-- JMS Send, define default destination and JmsTemplate    -->
+   <!-- ======================================================= -->
+   <!-- Default Destination Queue Definition -->
+   <bean id="defaultDestination" class="org.apache.activemq.command.ActiveMQQueue">
+      <!-- name of the queue -->
+      <constructor-arg index="0" value="Send2Recv" />
+   </bean>
+
+   <!-- JmsTemplate Definition -->
+   <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+      <property name="connectionFactory" ref="connectionFactory" />
+      <property name="defaultDestination" ref="defaultDestination" />
+   </bean>
+
+    <bean id="userCreateTopic"
+          class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg value="${topic.user_create:USER_CREATE}" />
+    </bean>
+
+    <bean id="userUpdateTopic"
+          class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg value="${topic.user_create:USER_UPDATE}" />
+    </bean>
+
+
+</beans>
