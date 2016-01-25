@@ -5,29 +5,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.liquidhub.integration</groupId>
-    <artifactId>salesforce-contact-sync</artifactId>
+    <artifactId>integration-hub</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <description>integration-hub</description>
 
     <build>
 
 
     </build>
+    <modules>
+        <module>integration-hub-webservices</module>
+        <module>integration-hub-api</module>
+        <module>integration-hub-sf-sync</module>
+    </modules>
 
-    <dependencies>
 
-        <dependency>
-            <groupId>com.sforce.soap.enterprise</groupId>
-            <artifactId>sf-enterprise-wsdl-stub</artifactId>
-            <version>35.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.force.api</groupId>
-            <artifactId>force-wsc</artifactId>
-            <version>36.1.0</version>
-        </dependency>
-
-    </dependencies>
     <dependencyManagement>
 
     </dependencyManagement>
