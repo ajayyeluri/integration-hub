@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserWs {
 
-
+//TODO testing checkin
     @Autowired
     MqUtils mqUtils;
 
