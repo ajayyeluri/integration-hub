@@ -12,17 +12,66 @@
 
     <artifactId>inegration-hub-webservices</artifactId>
 
+    <build>
+
+        <plugins>
+            <!--  tomcat plugin  -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <!-- or if you want to use tomcat 6.x <artifactId>tomcat6-maven-plugin</artifactId> -->
+                <version>2.0</version>
+                <configuration>
+                    <port>9090</port>
+                    <path>/</path>
+                    <systemProperties>
+                        <!--<derby.system.home>target/appserver-base/logs</derby.system.home>-->
+                        <jms.jost>localhost</jms.jost>
+                        <jms.port>61616</jms.port>
+                        <!--<spring.profiles.active>local</spring.profiles.active>-->
+                    </systemProperties>
+                    <useTestClasspath>true</useTestClasspath>
+                    <!--<additionalClasspathDirs>-->
+                        <!--<additionalClasspathDir>${basedir}/properties</additionalClasspathDir>-->
+                    <!--</additionalClasspathDirs>-->
+                    <warSourceDirectory>${basedir}/src/main/webapp </warSourceDirectory>
+                </configuration>
+                <!-- if you need some extra dependencies only for running the embeded
+                    tomcat add them in the plugin dependencies -->
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.activemq</groupId>
+                        <artifactId>activemq-client</artifactId>
+                        <version>5.11.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+
 
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-ws-core</artifactId>
             <version>2.2.4.RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-beans</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
         <dependency>
             <groupId>com.liquidhub.integration</groupId>
             <artifactId>integration-hub-api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
     </dependencies>
+
+
+
 </project>
