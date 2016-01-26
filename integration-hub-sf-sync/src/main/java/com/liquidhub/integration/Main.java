@@ -1,3 +1,5 @@
+package com.liquidhub.integration;
+
 import com.sforce.soap.enterprise.Connector;
 import com.sforce.soap.enterprise.DeleteResult;
 import com.sforce.soap.enterprise.EnterpriseConnection;

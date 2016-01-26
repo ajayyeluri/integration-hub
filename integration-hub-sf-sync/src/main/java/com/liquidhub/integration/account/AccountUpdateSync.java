@@ -1,10 +1,9 @@
 package com.liquidhub.integration.account;
 
 import com.liquidhub.integration.MessageProcessorImpl;
+import org.springframework.stereotype.Component;
 
-/**
- * Created by ayeluri on 1/25/2016.
- */
+@Component("AccountUpdateSync")
 public class AccountUpdateSync extends MessageProcessorImpl {
 
 }

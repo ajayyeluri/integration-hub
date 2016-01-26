@@ -1,9 +1,9 @@
 package com.liquidhub.integration.contact;
 
 import com.liquidhub.integration.MessageProcessorImpl;
+import org.springframework.stereotype.Component;
 
-/**
- * Created by ayeluri on 1/25/2016.
- */
+@Component("ContactUpdateSync")
+
 public class ContactUpdateSync extends MessageProcessorImpl {
 }
