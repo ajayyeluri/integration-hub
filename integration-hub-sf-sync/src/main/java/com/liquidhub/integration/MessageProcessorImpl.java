@@ -11,6 +11,7 @@ import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -18,8 +19,26 @@ import java.io.IOException;
 public abstract class MessageProcessorImpl implements MessageProcessor {
 
     protected Log logger = LogFactory.getLog(this.getClass());
-    String username ;
-    String password ;
+
+    @Value("${sf.username}")
+    public String username ;
+    @Value("${sf.password}")
+    public String password ;
+    @Value("${sf.url}")
+    public String sfUrl;
+
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setSfUrl(String sfUrl) {
+        this.sfUrl = sfUrl;
+    }
 
     protected EnterpriseConnection connection;
 

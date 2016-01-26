@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.io.IOException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:META-INF/ihub-api-appContext.xml")
+@ContextConfiguration("classpath*:META-INF/*-appContext.xml")
 //@ActiveProfiles(value = "local")
 public class AddContactTest {
 
@@ -60,4 +60,41 @@ public class AddContactTest {
         }
 
     }
+
+    @Test
+    public void publishUser() {
+        User user = new User();
+        user.setFirstName("Ajay");
+        user.setLastName("Yeluri");
+        user.setEid("ayeluri@test.com");
+        user.setEid("ayeluri");
+//
+//        Address address = new Address();
+//        address.setAddressType("HOME");
+//        address.setLine1("xyx...");
+//        user.addAddress(address.getAddressType(), address);
+
+        try {
+
+            String json  = IHubUtils.getUserAsJSon(user);
+            //                    = new MqUtils(jmsTemplate);
+//            messageProcessor.process(json);
+
+            MqUtils.getInstance().publishUserCreateMessage(json);
+//
+//            MqUtils.getInstance().publishUserUpdateMessage(json);
+//
+//            User user1  = IHubUtils.getUserfromJSon(json);
+
+            Thread.sleep(10000);
+
+        } catch (IOException e) {
+            logger.error(e, e);
+            assert false ;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

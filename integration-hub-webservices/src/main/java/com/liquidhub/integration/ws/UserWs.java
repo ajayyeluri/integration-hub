@@ -15,7 +15,6 @@ import java.io.IOException;
 @RestController
 public class UserWs {
 
-//TODO testing checkin
     @Autowired
     MqUtils mqUtils;
 
