@@ -31,7 +31,7 @@ public class UserDetailsAction extends Action {
 	 * @see com.liferay.portal.kernel.events.Action#run(HttpServletRequest arg0, HttpServletResponse arg1)
 	 */
 	public void run(HttpServletRequest request, HttpServletResponse response) throws ActionException {
-		System.out.println("in post login");
+		System.out.println("User Event ---- post login hook for Sales force ");
 		
 		
 		User user=null;
@@ -48,20 +48,30 @@ public class UserDetailsAction extends Action {
 			PermissionChecker checker = PermissionCheckerFactoryUtil.create(user);
             PermissionThreadLocal.setPermissionChecker(checker);
 
-			System.out.println(user.getFirstName()); 
+
+			System.out.println("*************************");
+			System.out.println(user.getFirstName());
 			System.out.println(user.getBirthday());
 			System.out.println(user.getEmailAddress());
 			System.out.println(user.getScreenName());
 			System.out.println(user.getLastName());
 			System.out.println(user.getMiddleName());
-
 			System.out.println("*************************");
 
+			boolean createuser = (user.getExpandoBridge().hasAttribute(SENT_TO_IHUB)
+					&& !((Boolean) user.getExpandoBridge().getAttribute(SENT_TO_IHUB)).booleanValue())? true : false ;
 
+			if ( ! user.getExpandoBridge().hasAttribute(SENT_TO_IHUB) || createuser ) {
+				System.out.println("****** User Not in SF. Create Event  - -" + user.getScreenName() );
+				new WebServiceClient().callWebService(user);
+				if (! user.getExpandoBridge().hasAttribute(SENT_TO_IHUB) ) {
+						user.getExpandoBridge().addAttribute(SENT_TO_IHUB);
+				}
+				user.getExpandoBridge().setAttribute(SENT_TO_IHUB, Boolean.TRUE);
 
-			if ( ! user.getExpandoBridge().hasAttribute(SENT_TO_IHUB)) {
-					new WebServiceClient().callWebService(user);
-					user.getExpandoBridge().addAttribute(SENT_TO_IHUB, true);
+			} else {
+				System.out.println("****** User already in SF Skip Create Event  - -" + user.getScreenName() );
+
 			}
 
 		} catch ( Exception e) {
