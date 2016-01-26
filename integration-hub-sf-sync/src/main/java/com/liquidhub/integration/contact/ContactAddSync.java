@@ -45,6 +45,10 @@ public class ContactAddSync extends MessageProcessorImpl {
                 logger.error(e, e);
             }
 
+        } else {
+            logger.warn(user.toString() + " --- Contact is already present in SalesForce");
+            processingError(user.toString(), "Contact is already present in SalesForce", null);
+
         }
         return false;
     }
