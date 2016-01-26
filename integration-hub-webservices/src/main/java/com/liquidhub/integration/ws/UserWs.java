@@ -35,15 +35,18 @@ public class UserWs {
     }
 
     @RequestMapping(value = "/add-user", method = RequestMethod.POST)
-    public User add(@RequestParam(value="fname", defaultValue = "") String fname,
+    public User add(
+            @RequestParam(value="eid") String eid,
+            @RequestParam(value="fname", defaultValue = "") String fname,
                    @RequestParam(value="lname", defaultValue = "") String lname,
-                   @RequestParam(value="email", defaultValue = "") String email) throws IOException {
+                   @RequestParam(value="email") String email) throws IOException {
 
         //Create a JSON User Object
         User user = new User();
         user.setEmail(email);
         user.setFirstName(fname);
         user.setLastName(lname);
+        user.setEid(eid);
 
         String message = IHubUtils.getUserAsJSon(user);
         MqUtils.getInstance().publishUserCreateMessage(message);

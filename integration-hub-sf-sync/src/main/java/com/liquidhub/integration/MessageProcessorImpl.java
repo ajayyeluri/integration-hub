@@ -1,38 +1,54 @@
 package com.liquidhub.integration;
 
 
+import com.liquidhub.integration.beans.User;
+import com.liquidhub.integration.utils.IHubUtils;
 import com.sforce.soap.enterprise.*;
 import com.sforce.soap.enterprise.Error;
 import com.sforce.soap.enterprise.sobject.Account;
 import com.sforce.soap.enterprise.sobject.Contact;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 
 public abstract class MessageProcessorImpl implements MessageProcessor {
 
-
+    protected Log logger = LogFactory.getLog(this.getClass());
     String username ;
     String password ;
 
-    EnterpriseConnection connection;
+    protected EnterpriseConnection connection;
+
+
+    protected com.liquidhub.integration.beans.User getUser(String userJSon) throws IOException {
+        return IHubUtils.getUserfromJSon(userJSon);
+    }
 
     boolean initGood ;
 
     public void process(String message) {
-        init();
-        processMessage(message);
+        try {
+            init();
+            User user = getUser(message);
+            if( ! processMessage(user)); processingError(message, "Error Processing Message", null);
+        } catch (Exception e) {
+            logger.error(e, e);
+            processingError(message, "Error Processing Message", e);
+        }
     }
 
     protected void processingError (String originalMessage, String error, Exception e ) {
 
     }
 
-    public abstract boolean processMessage(String message);
-
+    public abstract boolean processMessage(User user);
+    ConnectorConfig config;
     protected void init () {
-        ConnectorConfig config = new ConnectorConfig();
+        config = new ConnectorConfig();
         config.setUsername(username);
         config.setPassword(password);
         config.setTraceMessage(true);
