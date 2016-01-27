@@ -2,6 +2,7 @@ package com.liquidhub.integration;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.model.Address;
 import com.liferay.portal.model.User;
 import com.liferay.portal.util.PortalUtil;
 import org.apache.http.HttpResponse;
@@ -25,7 +26,7 @@ public class WebServiceClient {
 
     public void callUpdateWebService(User user) {
 
-        String url = PortalUtil.getPortalProperties().getProperty("user.add.url");
+        String url = PortalUtil.getPortalProperties().getProperty("user.update.url");
         System.out.println("User Add URL ---- " + url );
 
         HttpClient client = HttpClientBuilder.create().build();
@@ -36,7 +37,27 @@ public class WebServiceClient {
         urlParameters.add(new BasicNameValuePair("lname", user.getLastName()));
         urlParameters.add(new BasicNameValuePair("mname", user.getMiddleName()));
         urlParameters.add(new BasicNameValuePair("email", user.getEmailAddress()));
+
         urlParameters.add(new BasicNameValuePair("eid", user.getScreenName()));
+
+        try {
+            List<Address> addresses =  user.getAddresses();
+            if (addresses!=null && addresses.size() > 0 ) {
+                Address address  = addresses.get(1);
+                //TODO
+                //add address params for address 1 only
+                //address-line1
+                //address-line2
+                //city
+                //state
+                //zip
+
+
+            }
+        } catch (SystemException e) {
+            e.printStackTrace();
+        }
+
         try {
             urlParameters.add(new BasicNameValuePair("dob", String.valueOf(user.getBirthday().getTime())));
             urlParameters.add(new BasicNameValuePair("sex", user.getFemale() ? "F" : "M"));
