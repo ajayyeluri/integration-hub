@@ -23,6 +23,49 @@ import java.util.Map;
 
 public class WebServiceClient {
 
+    public void callUpdateWebService(User user) {
+
+        String url = PortalUtil.getPortalProperties().getProperty("user.add.url");
+        System.out.println("User Add URL ---- " + url );
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpPost post = new HttpPost(url);
+
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("fname", user.getFirstName()));
+        urlParameters.add(new BasicNameValuePair("lname", user.getLastName()));
+        urlParameters.add(new BasicNameValuePair("mname", user.getMiddleName()));
+        urlParameters.add(new BasicNameValuePair("email", user.getEmailAddress()));
+        urlParameters.add(new BasicNameValuePair("eid", user.getScreenName()));
+        try {
+            urlParameters.add(new BasicNameValuePair("dob", String.valueOf(user.getBirthday().getTime())));
+            urlParameters.add(new BasicNameValuePair("sex", user.getFemale() ? "F" : "M"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            post.setEntity(new UrlEncodedFormEntity(urlParameters));
+            HttpResponse response = client.execute(post);
+            System.out.println("Response Code : "
+                    + response.getStatusLine().getStatusCode());
+
+            BufferedReader rd = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent()));
+
+            StringBuffer result = new StringBuffer();
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     public void callWebService(User user) {
 
         String url = PortalUtil.getPortalProperties().getProperty("user.add.url");

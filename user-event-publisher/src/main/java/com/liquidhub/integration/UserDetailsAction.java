@@ -64,9 +64,11 @@ public class UserDetailsAction extends Action {
 			if ( ! user.getExpandoBridge().hasAttribute(SENT_TO_IHUB) || createuser ) {
 				System.out.println("****** User Not in SF. Create Event  - -" + user.getScreenName() );
 				new WebServiceClient().callWebService(user);
+
 				if (! user.getExpandoBridge().hasAttribute(SENT_TO_IHUB) ) {
 						user.getExpandoBridge().addAttribute(SENT_TO_IHUB);
 				}
+
 				user.getExpandoBridge().setAttribute(SENT_TO_IHUB, Boolean.TRUE);
 
 			} else {
