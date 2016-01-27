@@ -10,10 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <description>integration-hub</description>
 
-    <build>
 
-
-    </build>
     <modules>
         <module>integration-hub-api</module>
         <module>integration-hub-webservices</module>
