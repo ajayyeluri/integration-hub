@@ -30,7 +30,6 @@ public class AddContactTest {
 
     @Test
     public void addContaact() {
-    	
         User user = new User();
       
         user.setFirstName("anonymous55Contact_FN");
@@ -49,11 +48,11 @@ public class AddContactTest {
             //                    = new MqUtils(jmsTemplate);
             messageProcessor.process(json);
 
-           // MqUtils.getInstance().publishUserCreateMessage(json);
+//            MqUtils.getInstance().publishUserCreateMessage(json);
 //
-           // MqUtils.getInstance().publishUserUpdateMessage(json);
+//            MqUtils.getInstance().publishUserUpdateMessage(json);
 //
-            User user1  = IHubUtils.getUserfromJSon(json);
+//            User user1  = IHubUtils.getUserfromJSon(json);
 
 
         } catch (IOException e) {

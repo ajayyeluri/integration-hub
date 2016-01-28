@@ -6,22 +6,29 @@ import com.sforce.soap.enterprise.QueryResult;
 import com.sforce.soap.enterprise.SaveResult;
 import com.sforce.soap.enterprise.sobject.Account;
 import com.sforce.soap.enterprise.sobject.Contact;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component("ContactAddSync")
 public class ContactAddSync extends MessageProcessorImpl {
 
+    @Autowired
+    @Qualifier("UserIdLookUpService")
+    UserIdLookUpService userIdLookUpService;
+
     @Override
     public boolean processMessage(User  user) {
 
-        if (! isConctactPresent(user)) {
-            // add the contact to Sales Force
-            Contact contact = new Contact();          
+//        boolean alwayadd = true ;
+
+       if (! isContactPresent(user)) {
+           // add the contact to Sales Force
+            Contact contact = new Contact();
             contact.setFirstName(user.getFirstName());
-            contact.setLastName(user.getLastName());            
-            contact.setEmail(user.getEmail());            
-           
+            contact.setLastName(user.getLastName());
+//            contact.setAccountId(user.getEid());
+            contact.setEmail(user.getEmail());
 
             try {
 
@@ -32,6 +39,7 @@ public class ContactAddSync extends MessageProcessorImpl {
                 for (int i = 0; i < saveResults.length; i++) {
                     if (saveResults[i].isSuccess()) {
                         logger.info(i + ". Successfully created record - Id: " + saveResults[i].getId());
+                        userIdLookUpService.addUserAppID(SALES_FORCE_APP_NAME, saveResults[i].getId(), user.getEid());
                     } else {
                         com.sforce.soap.enterprise.Error[] errors = saveResults[i].getErrors();
                         for (int j = 0; j < errors.length; j++) {
@@ -58,9 +66,13 @@ public class ContactAddSync extends MessageProcessorImpl {
 
         // check SF if contact is already present using the email or AccoutnID
         try {
-        	//SELECT Id,AccountId,Email,FirstName,LastName FROM Contact where AccountId = '0012800000F6Mi7AAF' and FirstName='vinay33' and LastName='domala' and Email='rose@edge.com'
+
+            String userId = userIdLookUpService.getUserAppId(SALES_FORCE_APP_NAME, user.getEid());
+
             // query for the 5 newest contacts
-            QueryResult queryResults = connection.query("SELECT Id,AccountId,Email,FirstName,LastName FROM Contact where  FirstName = '"+user.getFirstName() +"' and LastName='"+user.getLastName() +"' and Email ='"+user.getEmail() +"'");
+            QueryResult queryResults = connection.query("SELECT Id, FirstName, LastName, Account.Name " +
+                    "FROM Contact WHERE Id= '" + userId +
+                    "' ORDER BY CreatedDate DESC LIMIT 5");
             if (queryResults.getSize() > 0)  return true ;
         } catch (Exception e) {
             logger.warn(e, e);

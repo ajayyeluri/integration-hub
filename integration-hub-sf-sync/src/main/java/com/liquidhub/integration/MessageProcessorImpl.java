@@ -19,6 +19,7 @@ import java.io.IOException;
 public abstract class MessageProcessorImpl implements MessageProcessor {
 
     protected Log logger = LogFactory.getLog(this.getClass());
+    public  final String SALES_FORCE_APP_NAME = "sales-force";
 
     @Value("${sf.username}")
     public String username ;
@@ -52,12 +53,17 @@ public abstract class MessageProcessorImpl implements MessageProcessor {
     public void process(String message) {
         try {
             init();
+            logger.info("using User Name:" + username );
             User user = getUser(message);
             if( ! processMessage(user)); processingError(message, "Error Processing Message", null);
         } catch (Exception e) {
             logger.error(e, e);
             processingError(message, "Error Processing Message", e);
         }
+    }
+
+    protected String getSFId(User user) {
+        return "";
     }
 
     protected void processingError (String originalMessage, String error, Exception e ) {
