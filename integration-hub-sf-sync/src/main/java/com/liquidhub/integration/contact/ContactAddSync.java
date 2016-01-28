@@ -1,6 +1,7 @@
 package com.liquidhub.integration.contact;
 
 import com.liquidhub.integration.MessageProcessorImpl;
+import com.liquidhub.integration.UserIdLookUpService;
 import com.liquidhub.integration.beans.User;
 import com.sforce.soap.enterprise.QueryResult;
 import com.sforce.soap.enterprise.SaveResult;
@@ -62,7 +63,7 @@ public class ContactAddSync extends MessageProcessorImpl {
         return false;
     }
 
-    protected boolean isConctactPresent(User user) {
+    protected boolean isContactPresent(User user) {
 
         // check SF if contact is already present using the email or AccoutnID
         try {

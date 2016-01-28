@@ -46,9 +46,9 @@ public class AddContactTest {
 
             String json  = IHubUtils.getUserAsJSon(user);
             //                    = new MqUtils(jmsTemplate);
-            messageProcessor.process(json);
+//            messageProcessor.process(json);
 
-//            MqUtils.getInstance().publishUserCreateMessage(json);
+            MqUtils.getInstance().publishUserCreateMessage(json);
 //
 //            MqUtils.getInstance().publishUserUpdateMessage(json);
 //

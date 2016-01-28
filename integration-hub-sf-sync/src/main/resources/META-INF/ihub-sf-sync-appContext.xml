@@ -24,14 +24,16 @@
         <route>
             <from uri="activemq:topic:USER_CREATE" />
             <to uri="stream:out" />
-            <!--<bean id="ContactAddSync" method="process"/>-->
+            <to uri="activemq:queue:USER_CREATE_QUEUE"/>
+            <bean ref="ContactAddSync" method="process"/>
         </route>
 
         <!-- Process new Update Message -->
         <route>
             <from uri="activemq:topic:USER_UPDATE" />
             <to uri="stream:out" />
-            <!--<bean id="ContactUpdateSync" method="process"/>-->
+            <to uri="activemq:queue:USER_UPDATE_QUEUE"/>
+            <bean ref="ContactUpdateSync" method="process"/>
         </route>
 
     </camelContext>
