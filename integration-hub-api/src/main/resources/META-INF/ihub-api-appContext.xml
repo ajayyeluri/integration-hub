@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-xsi:schemaLocation="
-http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
 
    <context:annotation-config />
@@ -66,5 +65,18 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <constructor-arg value="${topic.user_create:USER_UPDATE}" />
     </bean>
 
+    <!--<jdbc:embedded-database id="dataSource" type="DERBY">-->
+        <!--<jdbc:script location="classpath:db/sql/create-db.sql" />-->
+        <!--<jdbc:script location="classpath:db/sql/insert-data.sql" />-->
+    <!--</jdbc:embedded-database>-->
+
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+
+        <property name="driverClassName" value="${appdb.jdbc.driver:org.postgresql.Driver}" />
+        <property name="url" value="jdbc:${appdb.type:postgresql}://${appdb.hostname:localhost}:${appdb.port:5432}/${appdb.name:ihub}" />
+        <property name="username" value="${appdb.username:postgres}" />
+        <property name="password" value="${appdb.password:password}" />
+    </bean>
 
 </beans>
