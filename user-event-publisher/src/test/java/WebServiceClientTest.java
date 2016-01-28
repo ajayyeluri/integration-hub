@@ -14,6 +14,10 @@ public class WebServiceClientTest {
         try {
             String eid = (new WebServiceClient()).getEID("ayeluri", "http://10.60.1.165:9083/inegration-hub-webservices-1.0-SNAPSHOT/eid/fetch");
             System.out.println(eid);
+            eid = (new WebServiceClient()).getEID("ayeluri", "http://10.60.1.165:9083/inegration-hub-webservices-1.0-SNAPSHOT/eid/fetch");
+            System.out.println(eid);eid = (new WebServiceClient()).getEID("ayeluri", "http://10.60.1.165:9083/inegration-hub-webservices-1.0-SNAPSHOT/eid/fetch");
+            System.out.println(eid);eid = (new WebServiceClient()).getEID("ayeluri", "http://10.60.1.165:9083/inegration-hub-webservices-1.0-SNAPSHOT/eid/fetch");
+            System.out.println(eid);
             assert (eid==""||eid==null )? false : true ;
         } catch (IOException e) {
             e.printStackTrace();

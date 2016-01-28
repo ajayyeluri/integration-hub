@@ -49,12 +49,6 @@ public class WebServiceClient implements WebServiceClientInterface {
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet post = new HttpGet(url);
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("app_name", appName));
-        urlParameters.add(new BasicNameValuePair("app_id", screenName));
-
-
-
         HttpResponse response = null;
             response = client.execute(post);
             System.out.println("Response Code : "
