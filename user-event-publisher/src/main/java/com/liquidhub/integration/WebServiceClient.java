@@ -22,7 +22,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
-public class WebServiceClient {
+public class WebServiceClient implements WebServiceClientInterface {
 
     public static final String USER_WEBSERVICES_URL = "user.webservices.url";
 
@@ -30,14 +30,19 @@ public class WebServiceClient {
 
     String appName = "liferay";
 
-    public String getEID (User user) throws IOException {
+    @Override
+    public String getEID(User user) throws IOException {
         String url = PortalUtil.getPortalProperties().getProperty(USER_WEBSERVICES_URL);
-        return getEID(user, url+"/eid/fetch");
+        return getEID(user.getScreenName(), url+"/eid/fetch");
 
     }
 
-    public String getEID (User user, String url ) throws IOException{
+    @Override
+    public String getEID(String screenName, String url) throws IOException{
 
+
+        url = url + "?app_name=" + appName +
+                "=&app_id=" + screenName;
 
         System.out.println("User /eid/fetch URL ---- " + url );
 
@@ -46,7 +51,9 @@ public class WebServiceClient {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("app_name", appName));
-        urlParameters.add(new BasicNameValuePair("app_id", user.getScreenName()));
+        urlParameters.add(new BasicNameValuePair("app_id", screenName));
+
+
 
         HttpResponse response = null;
             response = client.execute(post);
@@ -66,6 +73,7 @@ public class WebServiceClient {
 
     }
 
+    @Override
     public void callUpdateWebService(User user) throws IOException {
         String url = PortalUtil.getPortalProperties().getProperty(USER_WEBSERVICES_URL) + "/update-user";
         System.out.println("User Add URL ---- " + url );
@@ -73,7 +81,8 @@ public class WebServiceClient {
           callUpdateWebService(user, url );
     }
 
-    public void callUpdateWebService(User user, String url ) throws IOException {
+    @Override
+    public void callUpdateWebService(User user, String url) throws IOException {
 
 
         HttpClient client = HttpClientBuilder.create().build();
@@ -161,11 +170,17 @@ public class WebServiceClient {
     }
 
 
+    @Override
     public void callWebService(User user) throws IOException {
-
 
         String url = PortalUtil.getPortalProperties().getProperty(USER_WEBSERVICES_URL)+"/add-user";
         System.out.println("User Add URL ---- " + url );
+        callUpdateWebService(user);
+
+    }
+
+        @Override
+        public void callWebService(User user, String url) throws IOException {
 
         String eid = getEID(user);
 

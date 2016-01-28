@@ -1,5 +1,6 @@
 package com.liquidhub.integration;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -56,7 +57,11 @@ public class ExampleUserLocalServiceImpl extends UserLocalServiceWrapper{
 
 		//TODO
 //		Uncomment the below line
-				(new WebServiceClient()).callUpdateWebService(user);
+		try {
+			(new WebServiceClient()).callUpdateWebService(user);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		return user ;
 	}
