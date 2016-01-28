@@ -7,7 +7,7 @@
             com.liferay.portal.service.UserLocalService
         </service-type>
         <service-impl>
-            com.proliferay.demo.ExampleUserLocalServiceImpl
+            com.liquidhub.integration.ExampleUserLocalServiceImpl
         </service-impl>
     </service>
-</hook>
+</hook>​

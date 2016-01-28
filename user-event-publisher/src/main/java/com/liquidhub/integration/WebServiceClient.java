@@ -3,8 +3,15 @@ package com.liquidhub.integration;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.Address;
+import com.liferay.portal.model.Contact;
 import com.liferay.portal.model.User;
 import com.liferay.portal.util.PortalUtil;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -12,15 +19,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class WebServiceClient {
 
@@ -44,6 +42,7 @@ public class WebServiceClient {
             List<Address> addresses =  user.getAddresses();
             if (addresses!=null && addresses.size() > 0 ) {
                 Address address  = addresses.get(1);
+
                 //TODO
                 //add address params for address 1 only
                 //address-line1
@@ -52,7 +51,20 @@ public class WebServiceClient {
                 //state
                 //zip
 
-
+                urlParameters.add(new BasicNameValuePair("street1", address.getStreet1()));
+                urlParameters.add(new BasicNameValuePair("street2", address.getStreet2()));
+                urlParameters.add(new BasicNameValuePair("street4", address.getStreet3()));
+                urlParameters.add(new BasicNameValuePair("city", address.getCity()));
+                urlParameters.add(new BasicNameValuePair("zip", address.getZip()));
+            //  urlParameters.add(new BasicNameValuePair("region", address.getRegion()));
+            //  urlParameters.add(new BasicNameValuePair("regionId", address.getRegionID()));
+            //  urlParameters.add(new BasicNameValuePair("state", address.getCountry()));
+            //  urlParameters.add(new BasicNameValuePair("type", address.getType()));
+            //  urlParameters.add(new BasicNameValuePair("type", address.getType()));
+            //  urlParameters.add(new BasicNameValuePair("type", address.getType()));
+            //  urlParameters.add(new BasicNameValuePair("primary", address.getPrimary()));
+                
+                
             }
         } catch (SystemException e) {
             e.printStackTrace();
@@ -65,6 +77,17 @@ public class WebServiceClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        /*try {
+			Contact contact = user.getContact();
+			//To Add any contact details if needed 
+						
+		} catch (PortalException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (SystemException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}*/
         try {
             post.setEntity(new UrlEncodedFormEntity(urlParameters));
             HttpResponse response = client.execute(post);
