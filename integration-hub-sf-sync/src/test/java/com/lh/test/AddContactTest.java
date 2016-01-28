@@ -30,11 +30,13 @@ public class AddContactTest {
 
     @Test
     public void addContaact() {
+    	
         User user = new User();
-        user.setFirstName("Ajay");
-        user.setLastName("Yeluri");
-        user.setEid("ayeluri@test.com");
-        user.setEid("ayeluri");
+      
+        user.setFirstName("anonymous55Contact_FN");
+        user.setLastName("anonymous55Contact_LN");       
+        user.setEmail("anonymous55Contact_FN@test1.com");
+//user.setEid("ayeluri");
 //
 //        Address address = new Address();
 //        address.setAddressType("HOME");
@@ -47,11 +49,11 @@ public class AddContactTest {
             //                    = new MqUtils(jmsTemplate);
             messageProcessor.process(json);
 
-//            MqUtils.getInstance().publishUserCreateMessage(json);
+           // MqUtils.getInstance().publishUserCreateMessage(json);
 //
-//            MqUtils.getInstance().publishUserUpdateMessage(json);
+           // MqUtils.getInstance().publishUserUpdateMessage(json);
 //
-//            User user1  = IHubUtils.getUserfromJSon(json);
+            User user1  = IHubUtils.getUserfromJSon(json);
 
 
         } catch (IOException e) {
