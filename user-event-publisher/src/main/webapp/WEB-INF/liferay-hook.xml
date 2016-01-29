@@ -2,6 +2,7 @@
 <!DOCTYPE hook PUBLIC "-//Liferay//DTD Hook 6.2.0//EN" "http://www.liferay.com/dtd/liferay-hook_6_2_0.dtd">
 <hook>
     <portal-properties>portal.properties</portal-properties>
+
     <service>
         <service-type>
             com.liferay.portal.service.UserLocalService
@@ -10,4 +11,4 @@
             com.liquidhub.integration.ExampleUserLocalServiceImpl
         </service-impl>
     </service>
-</hook>​
+</hook>

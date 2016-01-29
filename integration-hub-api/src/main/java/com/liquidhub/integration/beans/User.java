@@ -7,8 +7,26 @@ import java.util.Map;
 public class User {
 
     String firstName, lastName,  eid, email , telNumber, accid, AccountName,  firstNameUpdated, lastNameUpdated, emailUpdated;
+    String jobTitle, greeting;
+    private char gender;
 
-	public String getFirstNameUpdated() {
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    public String getGreeting() {
+        return greeting;
+    }
+
+    public void setGreeting(String greeting) {
+        this.greeting = greeting;
+    }
+
+    public String getFirstNameUpdated() {
 		return firstNameUpdated;
 	}
 
@@ -128,5 +146,9 @@ public class User {
                 ", email='" + email + '\'' +
                 ", telNumber='" + telNumber + '\'' +
                 '}';
+    }
+
+    public void setGender(char gender) {
+        this.gender = gender;
     }
 }

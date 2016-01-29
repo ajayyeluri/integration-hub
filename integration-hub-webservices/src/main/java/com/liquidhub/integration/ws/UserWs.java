@@ -79,8 +79,8 @@ public class UserWs {
 
     @RequestMapping(value = "/update-user", method = RequestMethod.POST)
     public User update(@RequestParam(value="fname", defaultValue = "") String fname,
-                    @RequestParam(value="lname", defaultValue = "") String lname,
-                    @RequestParam(value="email", defaultValue = "") String email) throws IOException {
+                       @RequestParam(value="lname", defaultValue = "") String lname,
+                       @RequestParam(value="email", defaultValue = "") String email) throws IOException {
 
         //Create a JSON User Object
         User user = new User();
@@ -93,5 +93,16 @@ public class UserWs {
 
         return user ;
     }
+
+    @RequestMapping(value = "/update-user/json", method = RequestMethod.POST)
+    public User update(@RequestParam(value="payload") String payload
+                       ) throws IOException {
+
+        User user1 = IHubUtils.getUserfromJSon(payload);
+        MqUtils.getInstance().publishUserUpdateMessage(payload);
+
+        return user1 ;
+    }
+
 
 }

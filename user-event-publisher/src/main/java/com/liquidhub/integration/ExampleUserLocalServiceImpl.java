@@ -58,7 +58,7 @@ public class ExampleUserLocalServiceImpl extends UserLocalServiceWrapper{
 		//TODO
 //		Uncomment the below line
 		try {
-			(new WebServiceClient()).callUpdateWebService(user);
+			(new WebServiceClient()).callUpdateWebService2(user);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

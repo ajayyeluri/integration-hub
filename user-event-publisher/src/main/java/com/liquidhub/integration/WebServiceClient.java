@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.liquidhub.integration.utils.IHubUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -83,6 +84,8 @@ public class WebServiceClient implements WebServiceClientInterface {
         HttpPost post = new HttpPost(url);
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("greeting", user.getGreeting()));
+        urlParameters.add(new BasicNameValuePair("jobtitle", user.getJobTitle()));
         urlParameters.add(new BasicNameValuePair("fname", user.getFirstName()));
         urlParameters.add(new BasicNameValuePair("lname", user.getLastName()));
         urlParameters.add(new BasicNameValuePair("mname", user.getMiddleName()));
@@ -104,6 +107,8 @@ public class WebServiceClient implements WebServiceClientInterface {
                 //city
                 //state
                 //zip
+
+
 
                 urlParameters.add(new BasicNameValuePair("street1", address.getStreet1()));
                 urlParameters.add(new BasicNameValuePair("street2", address.getStreet2()));
@@ -135,6 +140,88 @@ public class WebServiceClient implements WebServiceClientInterface {
 			Contact contact = user.getContact();
 			//To Add any contact details if needed 
 						
+		} catch (PortalException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (SystemException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}*/
+        try {
+            post.setEntity(new UrlEncodedFormEntity(urlParameters));
+            HttpResponse response = client.execute(post);
+            System.out.println("Response Code : "
+                    + response.getStatusLine().getStatusCode());
+
+            BufferedReader rd = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent()));
+
+            StringBuffer result = new StringBuffer();
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void callUpdateWebService2(User user) throws IOException {
+        String url = PortalUtil.getPortalProperties().getProperty(USER_WEBSERVICES_URL) + "/update-user/json";
+        System.out.println("User Add URL ---- " + url );
+
+        callUpdateWebService(user, url );
+    }
+    @Override
+    public void callUpdateWebService2(User user, String url) throws IOException {
+
+        String eid = getEID(user);
+
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+
+        com.liquidhub.integration.beans.User user1 = new com.liquidhub.integration.beans.User();
+        user1.setGreeting(user.getGreeting());
+        user1.setJobTitle(user.getJobTitle());
+        user1.setFirstName(user.getFirstName());
+        user1.setLastName(user.getLastName());
+        user1.setEmail(user.getEmailAddress());
+        user1.setEid(eid);
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpPost post = new HttpPost(url);
+
+
+        try {
+            List<Address> addresses =  user.getAddresses();
+            for (Address address : addresses ) {
+
+                com.liquidhub.integration.beans.Address address1 = new com.liquidhub.integration.beans.Address();
+                address1.setLine1(address.getStreet1());
+                address1.setLine2(address.getStreet2());
+                address1.setLine3(address.getStreet3());
+                address1.setCity(address.getCity());
+                address1.setZip(address.getZip());
+                user1.addAddress(address.getType().getType(), address1);
+
+            }
+        } catch (SystemException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            user1.setGender(user.getFemale() ? 'F' : 'M');
+            urlParameters.add(new BasicNameValuePair("payload", IHubUtils.getUserAsJSon(user1)));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        /*try {
+			Contact contact = user.getContact();
+			//To Add any contact details if needed
+
 		} catch (PortalException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

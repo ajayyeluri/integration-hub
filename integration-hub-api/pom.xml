@@ -19,6 +19,14 @@
     <dependencies>
 
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>
+                4.11
+            </version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.sforce.soap.enterprise</groupId>
             <artifactId>sf-enterprise-wsdl-stub</artifactId>
             <version>35.0</version>
