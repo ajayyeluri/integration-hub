@@ -22,6 +22,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import sun.misc.BASE64Encoder;
 
 public class WebServiceClient implements WebServiceClientInterface {
 
@@ -176,7 +177,7 @@ public class WebServiceClient implements WebServiceClientInterface {
         callUpdateWebService(user, url );
     }
     @Override
-    public void callUpdateWebService2(User user, String url) throws IOException {
+    public void callUpdateWebService3(User user, String url) throws IOException {
 
         String eid = getEID(user);
 
@@ -236,6 +237,98 @@ public class WebServiceClient implements WebServiceClientInterface {
         try {
             post.setEntity(new UrlEncodedFormEntity(urlParameters));
             HttpResponse response = client.execute(post);
+            System.out.println("Response Code : "
+                    + response.getStatusLine().getStatusCode());
+
+            BufferedReader rd = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent()));
+
+            StringBuffer result = new StringBuffer();
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void callUpdateWebService3(User user) throws IOException {
+        String url = PortalUtil.getPortalProperties().getProperty(USER_WEBSERVICES_URL) + "/update-user/json2";
+        System.out.println("User Add URL ---- " + url );
+
+        callUpdateWebService(user, url );
+    }
+    @Override
+    public void callUpdateWebService2(User user, String url) throws IOException {
+
+        String eid = getEID(user);
+
+        com.liquidhub.integration.beans.User user1 = new com.liquidhub.integration.beans.User();
+        user1.setGreeting(user.getGreeting());
+        user1.setJobTitle(user.getJobTitle());
+        user1.setFirstName(user.getFirstName());
+        user1.setLastName(user.getLastName());
+        user1.setEmail(user.getEmailAddress());
+        user1.setEid(eid);
+
+        HttpClient client = HttpClientBuilder.create().build();
+
+
+        try {
+            List<Address> addresses =  user.getAddresses();
+            for (Address address : addresses ) {
+
+                com.liquidhub.integration.beans.Address address1 = new com.liquidhub.integration.beans.Address();
+                address1.setLine1(address.getStreet1());
+                address1.setLine2(address.getStreet2());
+                address1.setLine3(address.getStreet3());
+                address1.setCity(address.getCity());
+                address1.setZip(address.getZip());
+                user1.addAddress(address.getType().getType(), address1);
+
+            }
+        } catch (SystemException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            user1.setGender(user.getFemale() ? 'F' : 'M');
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String json = IHubUtils.getUserAsJSon(user1);
+        BASE64Encoder encoder = new BASE64Encoder();
+        String encodedPayload = encoder.encode(json.getBytes());
+
+        /*try {
+			Contact contact = user.getContact();
+			//To Add any contact details if needed
+
+		} catch (PortalException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (SystemException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}*/
+        try {
+
+           HttpPost post = new HttpPost(url);
+
+            HttpGet get= new HttpGet(url+"?payload="+encodedPayload);
+            System.out.println("sending Event -- " + url +"?payload="+encodedPayload);
+            HttpResponse response = client.execute(get);
+
+            if( response.getStatusLine().getStatusCode() == 200 ) {
+                return ;
+            }
+
             System.out.println("Response Code : "
                     + response.getStatusLine().getStatusCode());
 

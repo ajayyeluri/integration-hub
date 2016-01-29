@@ -18,6 +18,10 @@ public interface WebServiceClientInterface {
 
     void callUpdateWebService2(User user) throws IOException;
 
+    void callUpdateWebService3(User user, String url) throws IOException;
+
+    void callUpdateWebService3(User user) throws IOException;
+
     void callUpdateWebService2(User user, String url) throws IOException;
 
     void callWebService(User user) throws IOException;

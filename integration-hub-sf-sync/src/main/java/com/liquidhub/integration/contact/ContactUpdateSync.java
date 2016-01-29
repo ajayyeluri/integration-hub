@@ -24,9 +24,13 @@ public class ContactUpdateSync extends MessageProcessorImpl {
             contact.setFirstName(user.getFirstNameUpdated());
             contact.setLastName(user.getLastNameUpdated());
             
-            contact.setEmail(user.getEmailUpdated());
+            contact.setEmail(user.getEmail());
            // contact.setAccountId(user.getAccid());
-           
+            contact.setTitle(user.getJobTitle());
+            contact.setSalutation(user.getGreeting());
+
+//            contact.set
+//            user.setGender(sex);
 
             try {
 
@@ -65,7 +69,8 @@ public class ContactUpdateSync extends MessageProcessorImpl {
         try {
         	//SELECT Id,AccountId,Email,FirstName,LastName FROM Contact where AccountId = '0012800000F6Mi7AAF' and FirstName='vinay33' and LastName='domala' and Email='rose@edge.com'
             // query for the 5 newest contacts
-            QueryResult queryResults = connection.query("SELECT Id,Email,FirstName,LastName FROM Contact where FirstName = '"+user.getFirstName() +"' and LastName='"+user.getLastName() +"' and Email ='"+user.getEmail() +"'");
+            QueryResult queryResults = connection.query("SELECT Id,Email,FirstName,LastName FROM Contact " +
+                    "where id = '"+user.getEid() +"'");
             if (queryResults.getSize() > 0){
             	SObject[] sObjects=queryResults.getRecords();
             	
@@ -73,7 +78,7 @@ public class ContactUpdateSync extends MessageProcessorImpl {
             	
             		Contact contact=	(Contact)sObjects[i];
             		System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX;   "+contact.getId());            		
-            		user.setEid(contact.getId());
+
             	}
             	
             	return true ;

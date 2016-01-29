@@ -41,7 +41,7 @@ public class WebServiceClientTest {
     }
 
     @Test
-    public void callUpdateWebService2() throws IOException {
+    public void callUpdateWebService2()  {
 
         String eid = "test1234";
 

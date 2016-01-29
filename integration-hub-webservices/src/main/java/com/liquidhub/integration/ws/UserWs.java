@@ -11,6 +11,7 @@ import org.apache.commons.logging.impl.LogFactoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
+import sun.misc.BASE64Decoder;
 
 import java.io.IOException;
 
@@ -80,13 +81,24 @@ public class UserWs {
     @RequestMapping(value = "/update-user", method = RequestMethod.POST)
     public User update(@RequestParam(value="fname", defaultValue = "") String fname,
                        @RequestParam(value="lname", defaultValue = "") String lname,
+                       @RequestParam(value="mname", defaultValue = "") String mname,
+                       @RequestParam(value="jobtitle", defaultValue = "") String jobtitle,
+                       @RequestParam(value="greeting", defaultValue = "") String greeting,
+                       @RequestParam(value="dob", defaultValue = "") String dob,
+                       @RequestParam(value="sex", defaultValue = "") char sex,
+                       @RequestParam(value="eid", defaultValue = "") String eid,
                        @RequestParam(value="email", defaultValue = "") String email) throws IOException {
+
 
         //Create a JSON User Object
         User user = new User();
         user.setEmail(email);
         user.setFirstName(fname);
         user.setLastName(lname);
+        user.setGender(sex);
+        user.setEid(eid);
+        user.setJobTitle(jobtitle);
+        user.setGreeting(greeting);
 
         String message = IHubUtils.getUserAsJSon(user);
         MqUtils.getInstance().publishUserUpdateMessage(message);
@@ -99,8 +111,26 @@ public class UserWs {
                        ) throws IOException {
 
         logger.info(payload);
+
         User user1 = IHubUtils.getUserfromJSon(payload);
         MqUtils.getInstance().publishUserUpdateMessage(payload);
+
+        return user1 ;
+    }
+
+    @RequestMapping(value = "/update-user/json2")
+    public User updatewithGet(@RequestParam(value="payload") String payload
+    ) throws IOException {
+
+        logger.debug(payload);
+
+        BASE64Decoder decoder = new BASE64Decoder();
+        String json = new String (decoder.decodeBuffer(payload));
+
+        logger.info(json );
+
+        User user1 = IHubUtils.getUserfromJSon(json);
+        MqUtils.getInstance().publishUserUpdateMessage(json);
 
         return user1 ;
     }

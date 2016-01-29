@@ -54,11 +54,15 @@ public class ExampleUserLocalServiceImpl extends UserLocalServiceWrapper{
 		// add code here to call wen services that does the update
 
 		System.out.println("Calling the user update Hook");
+		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+		System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
+		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
 
 		//TODO
 //		Uncomment the below line
 		try {
-			(new WebServiceClient()).callUpdateWebService2(user);
+			(new WebServiceClient()).callUpdateWebService(user);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
