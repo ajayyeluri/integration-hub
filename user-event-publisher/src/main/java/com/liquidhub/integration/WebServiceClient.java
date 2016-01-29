@@ -213,11 +213,15 @@ public class WebServiceClient implements WebServiceClientInterface {
 
         try {
             user1.setGender(user.getFemale() ? 'F' : 'M');
-            urlParameters.add(new BasicNameValuePair("payload", IHubUtils.getUserAsJSon(user1)));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        String json = IHubUtils.getUserAsJSon(user1);
+        System.out.println(json);
+        urlParameters.add(new BasicNameValuePair("payload", json ));
+
         /*try {
 			Contact contact = user.getContact();
 			//To Add any contact details if needed

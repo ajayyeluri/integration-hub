@@ -40,6 +40,7 @@ public class IHubUtilsTest {
         try {
             String json  = IHubUtils.getUserAsJSon(user);
 //                    = new MqUtils(jmsTemplate);
+            logger.info(json);
             MqUtils.getInstance().publishUserCreateMessage(json);
 
             MqUtils.getInstance().publishUserUpdateMessage(json);

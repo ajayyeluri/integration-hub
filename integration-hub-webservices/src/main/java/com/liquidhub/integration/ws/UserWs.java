@@ -98,6 +98,7 @@ public class UserWs {
     public User update(@RequestParam(value="payload") String payload
                        ) throws IOException {
 
+        logger.info(payload);
         User user1 = IHubUtils.getUserfromJSon(payload);
         MqUtils.getInstance().publishUserUpdateMessage(payload);
 
