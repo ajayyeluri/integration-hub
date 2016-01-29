@@ -2,8 +2,7 @@ package com.liquidhub.integration.contact;
 
 import com.liquidhub.integration.MessageProcessorImpl;
 import com.liquidhub.integration.beans.User;
-import com.sforce.soap.enterprise.QueryResult;
-import com.sforce.soap.enterprise.SaveResult;
+import com.sforce.soap.enterprise.*;
 import com.sforce.soap.enterprise.sobject.Account;
 import com.sforce.soap.enterprise.sobject.Contact;
 import com.sforce.soap.enterprise.sobject.SObject;
@@ -13,9 +12,70 @@ import org.springframework.stereotype.Component;
 @Component("ContactUpdateSync")
 public class ContactUpdateSync extends MessageProcessorImpl {
 
-	
+
     @Override
-    public boolean processMessage(User  user) {
+    public boolean processMessage(User user) {
+
+        System.out.println("Update the contact...");
+        Contact[] records = new Contact[1];
+
+        try {
+
+            QueryResult queryResults = connection.query("SELECT AccountId,AssistantName,AssistantPhone,Birthdate," +
+                    "CleanStatus,CreatedById,CreatedDate,Department," +
+                    "Description,Email,EmailBouncedDate,EmailBouncedReason," +
+                    "Fax,FirstName,HomePhone,Id,IsDeleted,IsEmailBounced," +
+                    "Jigsaw,JigsawContactId,Languages__c,LastActivityDate,LastCURequestDate," +
+                    "LastCUUpdateDate,LastModifiedById,LastModifiedDate,LastName,LastReferencedDate," +
+                    "LastViewedDate,LeadSource,Level__c,MailingAddress,MailingCity,MailingCountry," +
+                    "MailingLatitude,MailingLongitude,MailingPostalCode,MailingState,MailingStreet," +
+                    "MasterRecordId,MobilePhone,Name,OtherAddress,OtherCity,OtherCountry,OtherLatitude,OtherLongitude," +
+                    "OtherPhone,OtherPostalCode,OtherState,OtherStreet,OwnerId,Phone,PhotoUrl,ReportsToId," +
+                    "Salutation,SystemModstamp,Title FROM Contact WHERE Id ='" +user.getEid()+
+                    "'");
+
+            if (queryResults.getSize() > 0) {
+                for (int i=0;i<queryResults.getRecords().length;i++) {
+                    // cast the SObject to a strongly-typed Account
+                    Contact a = (Contact)queryResults.getRecords()[i];
+                    System.out.println("Updating Id: " + a.getId() + " - Name: "+a.getName());
+                    // modify the name of the Account
+                    a.setFirstName(user.getFirstNameUpdated());
+                    a.setLastName(user.getLastNameUpdated());
+
+                    a.setEmail(user.getEmail());
+                    // contact.setAccountId(user.getAccid());
+                    a.setTitle(user.getJobTitle());
+                    a.setSalutation(user.getGreeting());
+
+                    records[i] = a;
+                }
+            }
+
+            // update the records in Salesforce.com
+            SaveResult[] saveResults = connection.update(records);
+
+            // check the returned results for any errors
+            for (int i=0; i< saveResults.length; i++) {
+                if (saveResults[i].isSuccess()) {
+                    System.out.println(i+". Successfully updated record - Id: " + saveResults[i].getId());
+                } else {
+                    com.sforce.soap.enterprise.Error[] errors = saveResults[i].getErrors();
+                    for (int j=0; j< errors.length; j++) {
+                        System.out.println("ERROR updating record: " + errors[j].getMessage());
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true ;
+
+    }
+
+    public boolean processMessage1(User  user) {
 
         if (isConctactPresent(user)) {
             // add the contact to Sales Force
@@ -23,9 +83,9 @@ public class ContactUpdateSync extends MessageProcessorImpl {
             contact.setId(user.getEid());
             contact.setFirstName(user.getFirstNameUpdated());
             contact.setLastName(user.getLastNameUpdated());
-            
+
             contact.setEmail(user.getEmail());
-           // contact.setAccountId(user.getAccid());
+            // contact.setAccountId(user.getAccid());
             contact.setTitle(user.getJobTitle());
             contact.setSalutation(user.getGreeting());
 
